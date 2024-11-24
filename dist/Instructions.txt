@@ -1,0 +1,38 @@
+***************************************************
+		Instructions for WeatherBackgrounds
+			 Program by TomTom Tomkins
+***************************************************
+
+Files:
+WeatherBackgrounds.exe
+settings.txt
+instructions.txt
+
+---------------------------------------------------
+WeatherBackgrounds.exe
+Running this file will create/replace two pictures in a user-defined folder.
+The first time the program is run, the user will select the folder.
+The program stores the folder selected in settings.txt
+Read the settings.txt section for more information.
+
+To use as backgrounds, select the same folder as 'slideshow' option in windows.
+
+It creates two photos because if you outright replace the photo windows is
+using as the background image, it won't change. You have to have the
+system use 'slideshow' to update them. I would recommend 10 minute slideshow
+for 20 minute update
+---------------------------------------------------
+settings.txt
+This file holds the user-defineable settings, explained below:
+
+url -> the website to pull images from
+	Currently defaulted to the NOAA weather satellite
+	(updates with a new photo every 5 minutes)
+output folder -> the place the pictures will go once downloaded
+	Starts blank
+	Updated when the user selects the folder on first startup
+minutes -> how often to update the photos
+	Starts at 20 minutes, edit file and restart program to change
+---------------------------------------------------
+instructions.txt
+This file you are reading now :)

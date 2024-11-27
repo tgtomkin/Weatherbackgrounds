@@ -1,3 +1,3 @@
 ﻿url, https://cdn.star.nesdis.noaa.gov/GOES16/ABI/CONUS/GEOCOLOR/latest.jpg
-output folder,
-minutes, 10
+output folder, H:/Pictures/gnds
+minutes, 20

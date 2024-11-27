@@ -8,6 +8,11 @@ from tkinter import filedialog
 
 # pics_url = "https://cdn.star.nesdis.noaa.gov/GOES16/ABI/CONUS/GEOCOLOR/latest.jpg"
 
+def build_timestamp():
+    time_val = time.strftime('%Y-%m-%d %H:%M', time.localtime(time.time()))
+    time_string = "[" + time_val + "] - "
+    return time_string
+
 def open_settings_file():
     # pull settings file in relative path to code
     with open('settings.txt', mode = 'r', encoding= 'utf-8-sig') as settings_file:
@@ -23,7 +28,7 @@ def download_pics(picture_url):
     try:
         img_data = requests.get(picture_url).content
     except:
-        print("download failed")
+        print(build_timestamp() + "download failed")
         img_data = 0 # sets to 0 to be ignored before the store is attempted
     return  img_data
 
@@ -39,12 +44,12 @@ def store_pics(picture_data, file_path):
         handle2.write(picture_data)
 
 def download_and_store_pic(file_location, pic_url):
-    print("starting download")
+    print(build_timestamp() + "starting download")
     pic_data = download_pics(pic_url)
     if pic_data != 0:
-        print("picture exists")
+        print(build_timestamp() + "picture exists")
         store_pics(pic_data,file_location)
-    print("hey it worked")
+    print(build_timestamp() + "hey it worked")
 
 def main():
     # have user select filepath on first run

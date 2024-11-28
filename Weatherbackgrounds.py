@@ -49,7 +49,7 @@ def download_and_store_pic(file_location, pic_url):
     if pic_data != 0:
         print(build_timestamp() + "picture exists")
         store_pics(pic_data,file_location)
-    print(build_timestamp() + "hey it worked")
+        print(build_timestamp() + "hey it worked")
 
 def main():
     # have user select filepath on first run

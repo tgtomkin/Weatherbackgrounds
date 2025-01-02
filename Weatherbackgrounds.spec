@@ -2,7 +2,7 @@
 
 
 a = Analysis(
-    ['Weatherbackgrounds.py'],
+    ['WeatherBackgrounds.py'],
     pathex=[],
     binaries=[],
     datas=[],
@@ -13,6 +13,7 @@ a = Analysis(
     excludes=[],
     noarchive=False,
     optimize=0,
+    onefile=True,
 )
 pyz = PYZ(a.pure)
 
@@ -22,7 +23,7 @@ exe = EXE(
     a.binaries,
     a.datas,
     [],
-    name='Weatherbackgrounds',
+    name='WeatherBackgrounds',
     debug=False,
     bootloader_ignore_signals=False,
     strip=False,
@@ -35,4 +36,5 @@ exe = EXE(
     target_arch=None,
     codesign_identity=None,
     entitlements_file=None,
+    icon='Weatherbackground Icon.ico',
 )

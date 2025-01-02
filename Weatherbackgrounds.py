@@ -16,7 +16,7 @@ def build_timestamp():
     time_string = "[" + time_val + "]"
     return time_string
 
-# print out settings values of pas
+# print out passed-in settings values
 def print_settings(settings):
     print("URL: " + settings[0])
     print("Folder: " + settings[1])
@@ -93,27 +93,34 @@ def store_pics(picture_data, file_path):
             any_errors = 1
     return any_errors
 
-# Calls download_pic and store_pic to attempt main functionality and changes hover text of systray icon accordingly
+# Calls download_pic and store_pic to attempt main functionality.
+# Sets 'Run Succeeded' and 'Run Failed' text and marks that there is a new message to send to the systray icon.
 def download_and_store_pic(file_location, pic_url):
+    global last_run
+
+    # downloads picture to 'pic_data'
+    # download_pics function handles all errors. If any errors occur, the value will return as 0.
     print(build_timestamp() + " starting download")
     pic_data = download_pics(pic_url)
-    global last_run
     if pic_data != 0:
         print(build_timestamp() + " download worked")
+
+        # If the download worked, attempt to store 2 copies of the picture.
+        # store_pics handles errors and will return 1 after an error
         pic_storing_errors = store_pics(pic_data,file_location)
         if pic_storing_errors == 0:
             print(build_timestamp() + " hey it worked")
-            last_run = [build_timestamp() + " Run Succeeded", True, False]
+            last_run[0] = build_timestamp() + " Run Succeeded"
         else:
-            last_run = [build_timestamp() + " Run Failed :(", True, False]
+            last_run[0] = build_timestamp() + " Run Failed :("
+
     else:
         print(build_timestamp()+ "download failed")
-        last_run = [build_timestamp() + " Run Failed :(", True, False]
+        last_run[0] = build_timestamp() + " Run Failed :("
+    last_run[1] = True
 
-
-# request user to give filepath for program
-# if no directory is selected, files will be placed in same directory as the .exe and the program will
-# request the user to confirm their choice.
+# request user to give filepath for program, if no directory is selected:
+# files will be placed in same directory as the .exe and the program will request the user to confirm their choice
 def get_pic_filepath():
     pic_filepath = ""
     while pic_filepath == "":
@@ -131,21 +138,22 @@ def get_pic_filepath():
                 print("Please answer y/n")
     return pic_filepath
 
+# Included in the systray function and I didn't have the heart to delete it
 def say_hello(systray):
     print("Hello")
 
+# User request to re-attempt the background download and store. Restarts timer for next attempt.
 def refresh_background(systray):
     schedule.run_all()
 
-"""
-def on_quit_callback():
+# sets global 'last_run[2]' True if user quits from the systray icon. this will break out of the main() loop
+def on_quit_callback(self):
     global last_run
     last_run[2] = True
-"""
 
 def main():
-    # have user select filepath on first run
     global last_run
+    # have user select filepath on first run
     previous_settings = open_settings_file()
     picture_url = previous_settings[0] # set URL to settings.txt URL
     minutes_per_run = previous_settings[2] # set minutes_per_run to settings.txt minutes
@@ -165,24 +173,31 @@ def main():
         download_and_store_pic, file_location=pic_filepath, pic_url = picture_url)
     schedule.run_all()
 
-    # Create system tray icon
+    # Create system tray icon with 'refresh' and 'say hello' buttons. 'quit' button is automatically included
+    # Sets icon to 'WeatherBackground Icon' I created
     menu_options = (("Refresh Background", None, refresh_background),("Say Hello", None, say_hello),)
-    """systray = SysTrayIcon("WeatherBackground Icon.ico", "Weather Background", menu_options,on_quit=on_quit_callback)"""
-    systray = SysTrayIcon("WeatherBackground Icon.ico", "Weather Background", menu_options)
+    systray = SysTrayIcon("WeatherBackground Icon.ico", "Weather Background",
+                          menu_options, on_quit=on_quit_callback)
+    # systray = SysTrayIcon("WeatherBackground Icon.ico", "Weather Background", menu_options)
     systray.start()
 
     # check for new schedule every second
     while True:
+        # checks for pending runs and runs them when time is ready for it
         schedule.run_pending()
-        # TODO: add 'close program' on_quit_callback function that sets last_run[2] to True to break out of this loop
-        """if last_run[2]:
+
+        # on_quit_callback function sets last_run[2] to True to break out of this loop when systray icon 'quit' is used
+        if last_run[2]:
             break
-        """
+
         # checks if message has been updated
         if last_run[1]:
             systray.update(hover_text=last_run[0])
             last_run[1] = False
+        # sleeps for 1 second, then checks any new pending runs. May change to a longer time.
         time.sleep(1)
+
+    systray.shutdown()
 
 if __name__ == '__main__':
     main()

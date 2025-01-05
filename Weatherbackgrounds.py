@@ -13,7 +13,7 @@ last_run = ["No Runs Performed Yet", True, False]
 # create timestamp text for messages
 def build_timestamp():
     time_val = time.strftime('%Y-%m-%d %H:%M', time.localtime(time.time()))
-    time_string = "[" + time_val + "]"
+    time_string = "[" + time_val + "] - "
     return time_string
 
 # print out passed-in settings values
@@ -37,11 +37,11 @@ def open_settings_file():
         with open('settings.txt', mode = 'r', encoding= 'utf-8-sig') as settings_file:
             lines = settings_file.readlines()
     except IOError as e:
-        print(build_timestamp() + " IO Error when reading settings file Error{0}: {1}".format(e.errno, e.strerror))
+        print(build_timestamp() + "IO Error when reading settings file Error{0}: {1}".format(e.errno, e.strerror))
         settings_list = generic_settings()
         return settings_list
     except:
-        print(build_timestamp() + " Reading settings file failed")
+        print(build_timestamp() + "Reading settings file failed")
         settings_list = generic_settings()
         return settings_list
 
@@ -56,7 +56,7 @@ def download_pics(picture_url):
     try:
         img_data = requests.get(picture_url).content
     except:
-        print(build_timestamp() + " download failed")
+        print(build_timestamp() + "download failed")
         img_data = 0 # sets to 0 to be ignored before the store is attempted
     return  img_data
 
@@ -100,23 +100,23 @@ def download_and_store_pic(file_location, pic_url):
 
     # downloads picture to 'pic_data'
     # download_pics function handles all errors. If any errors occur, the value will return as 0.
-    print(build_timestamp() + " starting download")
+    print(build_timestamp() + "starting download")
     pic_data = download_pics(pic_url)
     if pic_data != 0:
-        print(build_timestamp() + " download worked")
+        print(build_timestamp() + "download worked")
 
         # If the download worked, attempt to store 2 copies of the picture.
         # store_pics handles errors and will return 1 after an error
         pic_storing_errors = store_pics(pic_data,file_location)
         if pic_storing_errors == 0:
-            print(build_timestamp() + " hey it worked")
-            last_run[0] = build_timestamp() + " Run Succeeded"
+            print(build_timestamp() + "hey it worked")
+            last_run[0] = build_timestamp() + "Run Succeeded"
         else:
-            last_run[0] = build_timestamp() + " Run Failed :("
+            last_run[0] = build_timestamp() + "Run Failed :("
 
     else:
         print(build_timestamp()+ "download failed")
-        last_run[0] = build_timestamp() + " Run Failed :("
+        last_run[0] = build_timestamp() + "Run Failed :("
     last_run[1] = True
 
 # request user to give filepath for program, if no directory is selected:

@@ -4,3 +4,4 @@ settings_original.txt
 /build/
 /dist/PicDownload/
 /dist/Weatherbackgrounds/
+*.pyc
